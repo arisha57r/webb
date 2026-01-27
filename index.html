@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Birthday Surprise</title>
+  <style>
+    body {
+      height: 100vh;
+      margin: 0;
+      background: #0e1940;
+      font-family: Georgia, serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+    }
+
+    h1#birthdayText {
+      position: absolute;
+      top: 20px;
+      width: 100%;
+      text-align: center;
+      font-size: 76px;
+      font-family: 'Comic Sans MS', cursive, sans-serif;
+      color: #f3f1f1;
+      text-shadow: 2px 2px #fff;
+      z-index: 100;
+    }
+
+    button {
+      padding: 12px 22px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      background: #c97c5d;
+      color: white;
+      box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+      margin-top: 10px;
+    }
+
+    button:hover {
+      background: #b56b4f;
+    }
+
+    .paper-container {
+      position: absolute;
+      top: 55%;
+      transform: translateY(-50%);
+      text-align: center;
+    }
+
+    .paper {
+      width: 340px;
+      background: #8eceee;
+      padding: 30px;
+      color: #3a2f2f;
+      border-radius: 6px;
+      box-shadow:
+        0 10px 25px rgba(0,0,0,0.2),
+        inset 0 0 30px rgba(0,0,0,0.05);
+      background-image:
+        linear-gradient(
+          to bottom,
+          rgba(0,0,0,0.03) 1px,
+          transparent 1px
+        );
+      background-size: 100% 28px;
+      transform-origin: top;
+      transform: scaleY(0);
+      max-height: 0;
+      overflow: hidden;
+      transition: transform 0.8s ease, max-height 0.8s ease;
+      margin-bottom: 10px;
+    }
+
+    .paper.show {
+      transform: scaleY(1);
+      max-height: 500px;
+    }
+
+    .paper p {
+      margin: 0 0 15px 0;
+      line-height: 1.6;
+    }
+
+    #clickButton {
+      display: none; /* hidden until paper opens */
+    }
+
+    #cake {
+      display: none;
+      width: 500px;
+      position: absolute;
+      bottom: 15%;
+      transform: scale(0) rotate(-10deg);
+    }
+
+    #cake.pop {
+      display: block;
+      animation: popBounce 0.8s cubic-bezier(0.68, -0.55, 0.27, 1.55) forwards;
+    }
+
+    @keyframes popBounce {
+      0%   { transform: scale(0) rotate(-10deg); }
+      60%  { transform: scale(1.2) rotate(5deg); }
+      80%  { transform: scale(0.95) rotate(-2deg); }
+      100% { transform: scale(1) rotate(0deg); }
+    }
+
+    #confetti {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  z-index: 50; /* below HAPPY BIRTHDAY (999), above background */
+}
+
+  </style>
+</head>
+<body>
+
+    <canvas id="confetti"></canvas>
+
+
+  <h1 id="birthdayText">HAPPY BIRTHDAY</h1>
+
+  <!-- Open button -->
+  <button id="openBtn" onclick="openPaper()">Open 🎁</button>
+
+  <div class="paper-container">
+    <div id="paper" class="paper">
+      <p>happy birthdayyayay 🥳</p>
+      <p>IDK WHAT TO SAY I JUST WANTED TO ADD THIS PAPER THINGY CUZ ITS CUTE BUT YES I HOPE YOU HAVE TONS OF FUN</p>
+      <p>— from welllyyyy</p>
+    </div>
+
+    <!-- CLICK button -->
+    <button id="clickButton" onclick="showCake()">CLICK 🎂</button>
+  </div>
+
+  <!-- Cake sticker -->
+  <img id="cake" src="https://scontent.cdninstagram.com/v/t51.82787-15/622367909_17938184907155825_7909749301893179823_n.png?_nc_cat=110&ccb=7-5&_nc_sid=ecb677&_nc_ohc=t3xW_HfbNskQ7kNvwETImw9&_nc_oc=Adnvlv2IJ-bHP4w3QKDYumFhSfUpRmyExoftnaDJyGhAFcdBajreDS1oArrP0OsqDd4&_nc_ad=z-m&_nc_cid=0&_nc_zt=23&_nc_ht=scontent.cdninstagram.com&_nc_gid=HVmqGSAo-2RkfVRa5LEWiw&oh=00_AfocBxLUFnAo2CPHivMv8ezeKDttY5CDT_LAs-sZuKGvHQ&oe=697EC14B" alt="Birthday Cake">
+
+  <script>
+    function openPaper() {
+      document.getElementById("paper").classList.add("show");
+      setTimeout(() => {
+        document.getElementById("clickButton").style.display = "inline-block";
+      }, 850);
+    }
+
+    
+    function showCake() {
+  document.getElementById("paper").style.display = "none";
+  document.getElementById("clickButton").style.display = "none";
+  document.getElementById("openBtn").style.display = "none";
+
+  document.getElementById("birthdayText").style.display = "block";
+  document.getElementById("cake").classList.add("pop");
+
+  startConfetti(); // 🎉 CONTINUOUS CONFETTI
+}
+
+    
+
+    const canvas = document.getElementById("confetti");
+const ctx = canvas.getContext("2d");
+
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+
+const confettiPieces = [];
+
+function createConfetti() {
+  return {
+    x: Math.random() * canvas.width,
+    y: Math.random() * canvas.height - canvas.height,
+    size: Math.random() * 6 + 4,
+    speed: Math.random() * 3 + 2,
+    color: `hsl(${Math.random() * 360}, 100%, 60%)`,
+    rotation: Math.random() * 360
+  };
+}
+
+function startConfetti() {
+  for (let i = 0; i < 150; i++) {
+    confettiPieces.push(createConfetti());
+  }
+
+  function animate() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+    confettiPieces.forEach(p => {
+      p.y += p.speed;
+      p.rotation += p.speed;
+
+      if (p.y > canvas.height) {
+        p.y = -10;
+        p.x = Math.random() * canvas.width;
+      }
+
+      ctx.save();
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.rotation * Math.PI / 180);
+      ctx.fillStyle = p.color;
+      ctx.fillRect(-p.size / 2, -p.size / 2, p.size, p.size);
+      ctx.restore();
+    });
+
+    requestAnimationFrame(animate);
+  }
+
+  animate();
+}
+
+  </script>
+
+</body>
+</html>
